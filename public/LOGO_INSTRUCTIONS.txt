@@ -1,0 +1,15 @@
+📋 Instructions pour le logo AILC
+====================================
+
+Placez votre logo AILC dans ce dossier:
+  public/logo.jpg
+
+Le logo doit:
+- Être au format JPG
+- Avoir un fond blanc (comme spécifié)
+- Avoir des proportions adaptées (le logo sera affiché à 32px de hauteur)
+
+Le logo apparaîtra dans la barre supérieure du dashboard, entre le bouton de menu et la barre de recherche.
+
+Si vous n'avez pas encore de logo, l'application fonctionnera quand même, mais affichera une image manquante à cet emplacement.
+

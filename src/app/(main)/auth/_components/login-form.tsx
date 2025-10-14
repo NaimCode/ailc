@@ -27,13 +27,24 @@ export function LoginForm() {
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    toast("You submitted the following values", {
-      description: (
-        <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    // Static credentials check
+    if (data.email === "admin@ailc.td" && data.password === "admin123") {
+      // Set cookie for authentication
+      document.cookie = "ailc-auth-token=authenticated; path=/; max-age=2592000"; // 30 days
+      
+      toast.success("Connexion réussie", {
+        description: "Redirection vers le tableau de bord...",
+      });
+      
+      // Redirect to dashboard
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 500);
+    } else {
+      toast.error("Erreur de connexion", {
+        description: "Email ou mot de passe incorrect.",
+      });
+    }
   };
 
   return (
@@ -44,9 +55,9 @@ export function LoginForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email Address</FormLabel>
+              <FormLabel>Adresse email</FormLabel>
               <FormControl>
-                <Input id="email" type="email" placeholder="you@example.com" autoComplete="email" {...field} />
+                <Input id="email" type="email" placeholder="admin@ailc.td" autoComplete="email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -57,7 +68,7 @@ export function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Mot de passe</FormLabel>
               <FormControl>
                 <Input
                   id="password"
@@ -85,13 +96,13 @@ export function LoginForm() {
                 />
               </FormControl>
               <FormLabel htmlFor="login-remember" className="text-muted-foreground ml-1 text-sm font-medium">
-                Remember me for 30 days
+                Se souvenir de moi pendant 30 jours
               </FormLabel>
             </FormItem>
           )}
         />
         <Button className="w-full" type="submit">
-          Login
+          Se connecter
         </Button>
       </form>
     </Form>

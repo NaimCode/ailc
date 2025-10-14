@@ -14,6 +14,7 @@ import {
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 import { cn, getInitials } from "@/lib/utils";
+import { useNotImplemented } from "@/contexts/not-implemented-context";
 
 export function AccountSwitcher({
   users,
@@ -27,6 +28,14 @@ export function AccountSwitcher({
   }>;
 }) {
   const [activeUser, setActiveUser] = useState(users[0]);
+  const { openNotImpl } = useNotImplemented();
+
+  const handleLogout = () => {
+    // Clear auth cookie
+    document.cookie = "ailc-auth-token=; path=/; max-age=0";
+    // Redirect to login
+    window.location.href = "/auth/v2/login";
+  };
 
   return (
     <DropdownMenu>
@@ -37,43 +46,31 @@ export function AccountSwitcher({
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="min-w-56 space-y-1 rounded-lg" side="bottom" align="end" sideOffset={4}>
-        {users.map((user) => (
-          <DropdownMenuItem
-            key={user.email}
-            className={cn("p-0", user.id === activeUser.id && "bg-accent/50 border-l-primary border-l-2")}
-            onClick={() => setActiveUser(user)}
-          >
-            <div className="flex w-full items-center justify-between gap-2 px-1 py-1.5">
-              <Avatar className="size-9 rounded-lg">
-                <AvatarImage src={user.avatar || undefined} alt={user.name} />
-                <AvatarFallback className="rounded-lg">{getInitials(user.name)}</AvatarFallback>
-              </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs capitalize">{user.role}</span>
-              </div>
-            </div>
-          </DropdownMenuItem>
-        ))}
+        <div className="flex items-center gap-2 px-2 py-2">
+          <Avatar className="size-9 rounded-lg">
+            <AvatarImage src={activeUser.avatar || undefined} alt={activeUser.name} />
+            <AvatarFallback className="rounded-lg">{getInitials(activeUser.name)}</AvatarFallback>
+          </Avatar>
+          <div className="grid flex-1 text-left text-sm leading-tight">
+            <span className="truncate font-semibold">{activeUser.name}</span>
+            <span className="text-muted-foreground truncate text-xs">{activeUser.email}</span>
+          </div>
+        </div>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={openNotImpl}>
             <BadgeCheck />
-            Account
+            Profil
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <CreditCard />
-            Billing
-          </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={openNotImpl}>
             <Bell />
             Notifications
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>
           <LogOut />
-          Log out
+          Se déconnecter
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
