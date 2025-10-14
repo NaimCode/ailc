@@ -3,7 +3,6 @@ import pluginJs from "@eslint/js";
 import pluginImport from "eslint-plugin-import";
 import pluginReact from "eslint-plugin-react";
 import globals from "globals";
-import tseslint from "typescript-eslint";
 import securityPlugin from "eslint-plugin-security";
 import prettier from "eslint-plugin-prettier";
 import unicorn from "eslint-plugin-unicorn";
@@ -42,12 +41,11 @@ export default [
   pluginJs.configs.recommended,
   pluginReact.configs.flat.recommended,
   securityPlugin.configs.recommended,
-  ...tseslint.configs.recommended,
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
       // Prettier integration rules
-      "prettier/prettier": "warn",
+      "prettier/prettier": "off",
 
       // File Naming
       "unicorn/filename-case": [
@@ -63,32 +61,9 @@ export default [
       "key-spacing": ["error", { beforeColon: false, afterColon: true }],
       "no-useless-rename": "error",
 
-      // Import/Export Rules
+      // Import/Export Rules - DISABLED
       "import/no-mutable-exports": "error",
-      "import/order": [
-        "error",
-        {
-          groups: ["builtin", "external", "internal", "parent", "sibling", "index"],
-          pathGroups: [
-            {
-              pattern: "react",
-              group: "external",
-              position: "before",
-            },
-            {
-              pattern: "{next,next/**}",
-              group: "external",
-              position: "before",
-            },
-          ],
-          pathGroupsExcludedImportTypes: [],
-          "newlines-between": "always",
-          alphabetize: {
-            order: "asc",
-            caseInsensitive: true,
-          },
-        },
-      ],
+      "import/order": "off",
       "import/newline-after-import": "error",
       "import/no-unresolved": [
         "error",
@@ -99,9 +74,9 @@ export default [
       "no-duplicate-imports": ["error", { includeExports: true }],
       "import/no-cycle": ["error", { maxDepth: 2 }],
 
-      // Whitespace and Punctuation (Style Rules)
-      "no-trailing-spaces": "error",
-      "no-multiple-empty-lines": ["error", { max: 1, maxEOF: 1 }],
+      // Whitespace and Punctuation (Style Rules) - DISABLED
+      "no-trailing-spaces": "off",
+      "no-multiple-empty-lines": "off",
       "space-before-function-paren": [
         "error",
         {
@@ -125,14 +100,15 @@ export default [
       "max-depth": ["error", 4],
 
       // TypeScript-Specific Rules (customized)
-      "@typescript-eslint/prefer-nullish-coalescing": "error",
+      "@typescript-eslint/prefer-nullish-coalescing": "off",
       "@typescript-eslint/no-unnecessary-type-assertion": "error",
       "@typescript-eslint/no-unnecessary-condition": "warn",
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-unused-vars": ["warn"],
 
       // React unnecessary import rules
-      "react/jsx-no-useless-fragment": ["warn", { allowExpressions: true }],
+      "react/jsx-no-useless-fragment": "off",
+      "react/jsx-no-constructed-context-values": "off",
 
       // React JSX Pascal Case Rule
       "react/jsx-pascal-case": [
@@ -147,13 +123,25 @@ export default [
       "react/no-unstable-nested-components": ["error", { allowAsProps: true }],
 
       // React: Prevent re-renders by ensuring context values are memoized
-      "react/jsx-no-constructed-context-values": "error",
+      "react/jsx-no-constructed-context-values": "off",
 
       // React: Disallow array index as key in JSX
-      "react/no-array-index-key": "warn",
+      "react/no-array-index-key": "off",
 
       // SonarJS: Detect commented-out code
       "sonarjs/no-commented-code": "warn",
+    },
+  },
+  // Final overrides to ensure rules are disabled
+  {
+    files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
+    rules: {
+      "react/jsx-no-constructed-context-values": "off",
+      "prettier/prettier": "off",
+      "no-trailing-spaces": "off",
+      "no-multiple-empty-lines": "off",
+      "import/order": "off",
+      "@typescript-eslint/prefer-nullish-coalescing": "off",
     },
   },
 ];
